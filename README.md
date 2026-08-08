@@ -41,43 +41,84 @@ npm run lint
 npm run build   # 정적 사이트를 out/ 으로 export
 ```
 
-빌드 결과를 로컬에서 확인하려면 `npx serve out` 으로 띄우면 된다 (Cloudflare Pages와 같은
-clean URL 방식이라 `/room?id=...` 이 그대로 동작한다).
+빌드 결과를 로컬에서 확인하려면 `npm run preview` (`next build` + `wrangler dev`)를 쓴다.
+배포와 같은 에셋 라우팅으로 서빙되므로 `/room?id=...` 동작을 그대로 확인할 수 있다.
 
-## 배포 (Cloudflare Pages)
+## 배포 (Cloudflare Workers — 정적 에셋)
 
 이 앱은 **정적 사이트로 빌드된다** (`next.config.ts`의 `output: "export"`). 서버가 할 일이
-없기 때문 — 데이터는 전부 브라우저에서 Supabase로 직접 오간다. 그래서 Workers 런타임이나
-`@opennextjs/cloudflare` 어댑터 없이 Pages에 그냥 올리면 된다.
+없기 때문 — 데이터는 전부 브라우저에서 Supabase로 직접 오간다. 그래서 서버 런타임이나
+`@opennextjs/cloudflare` 어댑터 없이 정적 에셋만 올리면 된다.
+
+### Workers인가 Pages인가
+
+이 저장소는 **Workers Static Assets** 기준으로 설정돼 있다 (`wrangler.jsonc`).
+
+Cloudflare는 Pages와 Workers를
+[하나의 경험으로 합치는 중](https://blog.cloudflare.com/pages-and-workers-are-converging-into-one-experience/)이지만,
+2026-08 기준 **Pages는 폐기(deprecate)되지 않았고 새 프로젝트도 계속 만들 수 있다.** 둘 다
+유효한 선택이며, 대시보드의 "Import a repository" 흐름이 Workers 프로젝트를 만들기 때문에
+이쪽으로 맞춘 것뿐이다.
+
+> **Pages로 가려면 `wrangler.jsonc`를 반드시 지워야 한다.** Pages 프로젝트에서 wrangler 설정
+> 파일은 선택이지만, *존재한다면* `pages_build_output_dir` 키가 반드시 있어야 한다. 이
+> 파일은 Workers용(`assets` 블록)이라 그 키가 없어서 `wrangler pages deploy`가 검증 단계에서
+> 실패한다. Pages를 쓸 경우 설정은 대시보드에만 넣는다 — Framework preset
+> `Next.js (Static HTML Export)`, Build command `npx next build`, Build output directory `out`.
+
+### `wrangler.jsonc`를 지우지 말 것 (Workers를 쓰는 한)
+
+wrangler는 설정 파일이 **없으면** 자동 설정(autoconfig)을 돌려 프레임워크를 추측한다.
+Next.js를 발견하면 `@opennextjs/cloudflare`(서버 런타임)로 배포하려 드는데, 이 앱은 정적
+빌드라 OpenNext가 찾는 `.next/standalone`이 존재하지 않아 **반드시 실패한다**:
+
+```
+Error: ENOENT: no such file or directory,
+  open '.next/standalone/.next/server/pages-manifest.json'
+```
+
+`wrangler.jsonc`가 있으면 autoconfig가 건너뛰어지고 정적 에셋 설정이 그대로 쓰인다.
 
 ### 대시보드 설정
 
-**Workers & Pages > Create application > Pages > Import an existing Git repository**에서
-저장소를 고르고, 빌드 설정을 아래와 같이 넣는다.
+**Workers & Pages > Create > Import a repository**로 저장소를 연결하고, 빌드 설정을 아래와
+같이 넣는다.
 
 | 항목 | 값 |
 | --- | --- |
-| Framework preset | `Next.js (Static HTML Export)` |
 | Build command | `npx next build` |
-| Build output directory | `out` |
-| Production branch | `main` |
+| Deploy command | `npx wrangler deploy` (기본값) |
+| Root directory | 비워 둠 |
+
+출력 디렉터리·라우팅은 대시보드가 아니라 `wrangler.jsonc`의 `assets`가 결정한다
+(`./out`, `html_handling`, `not_found_handling`).
 
 ### 환경 변수 (필수)
 
-**Settings > Environment variables**에 아래 두 개를 **Production과 Preview 양쪽 모두** 추가한다.
+**Settings > Build > Variables and Secrets**에 아래 두 개를 추가한다.
 
 ```
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
 
-> **중요:** `NEXT_PUBLIC_*` 값은 런타임이 아니라 **빌드 시점에 JS 번들 안으로 구워진다.**
-> 그래서 (1) 변수가 없으면 빌드가 실패하고, (2) 값을 바꾸면 재배포(Retry deployment)를
-> 해야 반영된다. anon key는 원래 브라우저에 노출되는 공개 키라 번들에 들어가도 문제없다.
+> **중요 1 — 반드시 *빌드* 변수여야 한다.** Worker 런타임 변수(Settings > Runtime)에 넣으면
+> 동작하지 않는다. 정적 사이트라 실행되는 Worker 코드가 없고, 값은 빌드 때 이미 결정된다.
+>
+> **중요 2 — `NEXT_PUBLIC_*`은 빌드 시점에 JS 번들 안으로 구워진다.** 그래서 (1) 변수가
+> 없으면 빌드가 즉시 실패하고, (2) 값을 바꾸면 재배포해야 반영된다. anon key는 원래
+> 브라우저에 노출되는 공개 키라 번들에 들어가도 문제없다.
+
+### 로컬에서 배포 산출물 확인
+
+```bash
+npm run preview          # next build + wrangler dev (실제 에셋 라우팅 그대로)
+npx wrangler deploy --dry-run   # 설정만 검증, 업로드 안 함
+```
 
 ### Node 버전
 
-`.node-version`에 `22`로 고정해 뒀다. Cloudflare Pages가 이 파일을 읽는다.
+`.node-version`에 `22`로 고정해 뒀다.
 
 ### 방 링크 형식
 
@@ -86,9 +127,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 **`/room?id=<uuid>`** 쿼리 형식을 쓴다. 앱의 "링크 복사"가 현재 주소를 그대로 복사하므로
 공유 흐름은 동일하다.
 
-경로 형식(`/room/<uuid>`)을 꼭 쓰고 싶다면 Pages 대신 Workers +
-[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)로 가야 한다 (서버 런타임이
-붙으므로 설정과 비용이 늘어난다).
+경로 형식(`/room/<uuid>`)을 꼭 쓰고 싶다면 정적 빌드를 포기하고
+[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)로 가야 한다 — `output: "export"`를
+빼고 어댑터를 붙이는 방식이다 (서버 런타임이 붙으므로 설정과 비용이 늘어난다).
 
 ## 구조
 

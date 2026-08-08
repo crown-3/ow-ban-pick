@@ -1,0 +1,23 @@
+{
+  // 이 파일이 존재한다는 사실 자체가 중요하다.
+  // wrangler는 설정 파일이 없으면 자동 설정(autoconfig)을 돌려서 프레임워크를 추측하는데,
+  // Next.js를 발견하면 @opennextjs/cloudflare(서버 런타임)로 배포하려 든다.
+  // 이 앱은 output: "export"로 정적 빌드라 .next/standalone이 없어서 그 경로는 반드시 실패한다.
+  // 설정 파일을 두면 autoconfig가 건너뛰어지고 아래 정적 에셋 설정이 그대로 쓰인다.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ow-ban-pick",
+  "compatibility_date": "2026-08-08",
+
+  // Worker 스크립트가 없다 — "main" 없이 정적 에셋만 서빙한다.
+  "assets": {
+    "directory": "./out",
+
+    // 개별 파일은 확장자 없이(/create → create.html), 폴더 index는 슬래시로 서빙한다.
+    "html_handling": "auto-trailing-slash",
+
+    // 없는 경로는 Next가 만들어 준 out/404.html을 404 상태로 돌려준다.
+    // (SPA 폴백이 아니다 — 이 앱은 경로별 HTML이 실제로 존재하고,
+    //  방 주소는 /room?id=<uuid> 쿼리라 경로 폴백이 필요 없다.)
+    "not_found_handling": "404-page"
+  }
+}
