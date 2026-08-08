@@ -1,0 +1,602 @@
+/* Modernist design system — ported from the Claude Design project
+   (`_ds/modernist-.../styles.css`) so the app matches the mockup. */
+
+:root {
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #ec3013;
+  --color-accent-2: #e15b47;
+  --color-divider: color-mix(in srgb, #201e1d 40%, transparent);
+
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-200: #eae7e7;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2d2b2b;
+
+  --color-accent-100: #fff2ef;
+  --color-accent-200: #ffe0d9;
+  --color-accent-300: #ffc4b8;
+  --color-accent-400: #ff9783;
+  --color-accent-500: #ff563c;
+  --color-accent-600: #dd2b0f;
+  --color-accent-700: #ae1800;
+  --color-accent-800: #7c1405;
+  --color-accent-900: #4d170e;
+
+  /* 팀 아이덴티티 색. 팀 1은 파랑, 팀 2는 시스템 accent(주황빨강)를 그대로 쓴다.
+     앱 자체의 브랜드 accent(버튼·키커)와는 별개 — 팀을 가리키는 자리에만 쓴다. */
+  --color-team-1: #1b4fd8;
+  --color-team-1-100: #e9efff;
+  --color-team-1-600: #1540b4;
+  --color-team-1-800: #0c2a70;
+  --color-team-2: var(--color-accent);
+  --color-team-2-100: var(--color-accent-100);
+  --color-team-2-600: var(--color-accent-600);
+  --color-team-2-800: var(--color-accent-800);
+
+  --font-heading: var(--font-archivo), system-ui, sans-serif;
+  --font-heading-weight: 800;
+  --font-body: var(--font-archivo), system-ui, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+
+  --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
+}
+
+html {
+  height: 100%;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--space-2);
+}
+h1 {
+  font-size: 42px;
+}
+h2 {
+  font-size: 32px;
+}
+h3 {
+  font-size: 25px;
+}
+h4 {
+  font-size: 20px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+p {
+  margin: 0 0 var(--space-3);
+}
+a {
+  color: var(--color-accent);
+  text-underline-offset: 3px;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+.text-muted {
+  color: color-mix(in srgb, var(--color-text) 55%, transparent);
+}
+
+/* — rules — */
+.hr {
+  height: 2px;
+  border: 0;
+  margin: var(--space-4) 0;
+  background: var(--color-divider);
+}
+
+/* — buttons — */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: var(--radius-md);
+}
+.btn svg {
+  display: block;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+.btn-primary:hover {
+  background: var(--color-accent-600);
+}
+.btn-primary:active {
+  background: var(--color-accent-700);
+}
+.btn-secondary {
+  border-color: var(--color-divider);
+}
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+.btn-secondary:active {
+  background: color-mix(in srgb, var(--color-text) 14%, transparent);
+}
+.btn-ghost {
+  color: var(--color-accent);
+  padding-inline: var(--space-1);
+}
+.btn-ghost:hover {
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+.btn-ghost:active {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+.btn-block {
+  width: 100%;
+  margin-top: var(--space-2);
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* — forms — */
+.field > label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+.input {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  caret-color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+}
+.input:hover {
+  border-color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+.input:focus-visible {
+  border-color: var(--color-accent);
+  outline-offset: 0;
+}
+
+/* — tags — */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  padding: 3px 10px;
+  border-radius: calc(var(--radius-md) * 0.75);
+}
+.tag-accent {
+  background: var(--color-accent-100);
+  color: var(--color-accent-800);
+}
+.tag-neutral {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-800);
+}
+.tag-outline {
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+}
+.tag-team-1 {
+  background: var(--color-team-1-100);
+  color: var(--color-team-1-800);
+}
+.tag-team-2 {
+  background: var(--color-team-2-100);
+  color: var(--color-team-2-800);
+}
+
+/* — dialog — */
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: color-mix(in srgb, var(--color-neutral-900) 50%, transparent);
+}
+.dialog {
+  width: min(440px, 100%);
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  border: 2px solid var(--color-text);
+  box-shadow: var(--shadow-lg);
+}
+.dialog-content {
+  padding: 20px 20px 18px;
+}
+.dialog-kicker {
+  font: 800 11px var(--font-heading);
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+}
+.dialog-title {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight);
+  font-size: 21px;
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+.dialog-body {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--color-text) 72%, transparent);
+}
+.dialog-actions {
+  display: flex;
+  border-top: 2px solid var(--color-divider);
+}
+.dialog-actions .btn {
+  flex: 1;
+  justify-content: flex-start;
+  border: 0;
+  border-radius: 0;
+  padding: 16px 20px;
+  font-size: 15px;
+}
+.dialog-actions .btn + .btn {
+  border-left: 2px solid var(--color-divider);
+}
+
+/* — app shell — */
+.screen {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+/* 밴픽 화면은 화면 높이에 딱 맞춰 고정한다. 그래야 헤더/제출 바가 늘 제자리에 있고,
+   가운데 영역(영웅 팔레트 · 팀 제안)만 각자 스크롤된다 — 팀 제안이 스크롤에 밀려
+   화면 밖으로 사라지지 않게 하는 게 핵심. */
+.screen-fixed {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.pick-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+.pick-palette {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (min-width: 640px) {
+  .screen {
+    max-width: 480px;
+    margin: 0 auto;
+    border-left: 2px solid var(--color-divider);
+    border-right: 2px solid var(--color-divider);
+  }
+}
+.app-logo {
+  flex: none;
+  background: var(--color-neutral-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 9px var(--font-body);
+  color: var(--color-neutral-700);
+  text-align: center;
+  line-height: 1.2;
+}
+.app-header {
+  padding: 18px 24px 20px;
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-divider);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.app-header .app-logo {
+  width: 52px;
+  height: 52px;
+}
+.app-title {
+  font: 800 20px var(--font-heading);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  text-align: center;
+}
+.app-header-compact {
+  padding: 12px 16px;
+  background: var(--color-surface);
+  border-bottom: 2px solid var(--color-divider);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.app-header-compact .app-logo {
+  width: 30px;
+  height: 30px;
+  font-size: 6.5px;
+}
+.app-header-compact .app-title {
+  font: 800 14px var(--font-heading);
+  color: var(--color-text);
+  flex: 1;
+  text-align: left;
+}
+
+/* — team proposal panel —
+   팔레트와는 따로 스크롤되는 오른쪽 기둥. 패널 자체는 화면에 붙어 있고(sticky),
+   내용이 길어지면 패널 안에서만 스크롤되도록 해서 항상 보이게 한다. */
+.proposal-panel {
+  position: sticky;
+  top: 0;
+  align-self: stretch;
+  width: 112px;
+  flex: none;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-left: 2px solid var(--color-divider);
+}
+.proposal-head {
+  flex: none;
+  padding: 10px 10px 8px;
+  border-bottom: 2px solid var(--color-divider);
+  background: var(--color-surface);
+}
+.proposal-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 10px;
+}
+.proposal-overflow {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 2px solid var(--color-divider);
+}
+.proposal-overflow-label {
+  font: 800 9.5px var(--font-heading);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  margin-bottom: 6px;
+}
+.proposal-overflow-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+.proposal-overflow-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+}
+.proposal-overflow-cell .proposal-overflow-name {
+  font: 600 8px/1.1 var(--font-body);
+  text-align: center;
+  padding: 0 1px 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+.proposal-overflow-votes {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: color-mix(in srgb, var(--color-text) 75%, transparent);
+  color: var(--color-bg);
+  font: 800 8px var(--font-heading);
+  padding: 1px 3px;
+}
+
+/* — hero grid cells (ban/pick palette + team proposal) — */
+.hero-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  /* iOS에서 꾹 눌렀을 때 뜨는 "사진 저장 / 복사" 콜아웃을 막는다.
+     이게 없으면 확정 밴을 걸려고 길게 누를 때마다 OS 메뉴가 가로챈다. */
+  -webkit-touch-callout: none;
+}
+.hero-portrait {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--color-neutral-300);
+  border: 1px solid color-mix(in srgb, var(--color-text) 25%, transparent);
+  -webkit-touch-callout: none;
+}
+.hero-img {
+  object-fit: cover;
+}
+/* 이미지가 포인터 이벤트나 드래그의 대상이 되지 않게 한다. 터치 제스처는 전부
+   부모 버튼이 받아야 이동 감지(스크롤 판별)가 정확해진다. */
+.hero-cell img,
+.proposal-overflow-cell img {
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.hero-name {
+  font: 600 9px/1.1 var(--font-body);
+  color: var(--color-text);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 선택 상태가 한눈에 구분되도록: 고르지 않은 영웅은 흐리게 깔아두고, 고른 영웅만
+   또렷하게 살린다. 그래야 한 번 더 눌러 선택을 취소했을 때 "빠졌다"가 바로 보인다. */
+.hero-cell .hero-portrait,
+.hero-cell .hero-name {
+  transition:
+    opacity 120ms ease,
+    filter 120ms ease,
+    transform 120ms ease;
+}
+.hero-cell:not(.is-picked):not(.is-locked) .hero-portrait {
+  opacity: 0.5;
+  filter: grayscale(0.7);
+}
+.hero-cell:not(.is-picked):not(.is-locked) .hero-name {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+}
+.hero-cell:hover .hero-portrait {
+  opacity: 1;
+  filter: none;
+}
+.hero-cell:active .hero-portrait {
+  transform: scale(0.94);
+}
+.hero-cell.is-picked .hero-portrait {
+  opacity: 1;
+  filter: none;
+  outline: 3px solid var(--color-text);
+  outline-offset: -3px;
+}
+.hero-cell.is-locked .hero-portrait {
+  opacity: 1;
+  filter: none;
+  outline: 3px solid var(--team-accent, var(--color-accent));
+  outline-offset: -3px;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--team-accent, var(--color-accent)) 35%, transparent);
+}
+.hero-cell.is-picked .hero-name,
+.hero-cell.is-locked .hero-name {
+  font-weight: 800;
+}
+.hero-lock-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--team-accent, var(--color-accent));
+  color: var(--color-bg);
+  font: 800 8px var(--font-heading);
+  padding: 1px 3px;
+}
+.hero-pick-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--color-text);
+  color: var(--color-bg);
+  font: 800 8px var(--font-heading);
+  padding: 1px 4px;
+  line-height: 1.3;
+}
